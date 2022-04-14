@@ -11,6 +11,33 @@ exclude = set(string.punctuation)
 #To max out field limit
 csv.field_size_limit(sys.maxsize)
 
+#The following code extracts date, ticker and text from the json file in the NASDAQ data folder and creates a csv file with the three columns
+
+json_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/Nasdaq/NASDAQ_News.json"
+first_csv_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_compact.csv"
+
+with open(json_file_path, 'r') as json_file:
+    with open(first_csv_path, 'w') as first_csv:
+        writer = csv.writer(first_csv)
+        writer.writerow(["Date", "Ticker", "Text"])
+        for i, line in enumerate(json_file):
+            data = json.loads(line)
+
+            try:
+                writer.writerow([data["article_time"]["$date"], data["symbols"], data["article_content"]])
+            except KeyError:
+                continue
+
+            if i == 100:
+                break
+
+        json_file.close()
+        first_csv.close()
+
+
+#The following code takes the csv file created from the code above and adjusts the date format such that it can be used to fetch data from the wrds database
+#Additionally text will be processed to reduce noise.
+
 #### FUNCTIONS TO CLEAN PHRASES AND WORDS #### Frankel, Jennings and Lee (2021)
 
 stopwords = ['a','able','across','after','also','am','among','an','and','any','are','as','at','be','because','been','but','by','can','could','dear','did','do','does','either','else','ever','every','for','from','get','got','had','has','have','he','her','hers','him','his','how','however','i','if','in','into','is','it','its','just','let','like','likely','me','my','of','off','often','on','only','or','other','our','own','rather','said','say','says','she','should','since','so','some','than','that','the','their','them','then','there','these','they','this','tis','to','too','twas','us','wants','was','we','were','what','when','where','which','while','who','whom','why','will','with','would','yet','you','your']
@@ -47,32 +74,6 @@ def fixword(word):
             word = ''
         return word
 
-#The following code extracts date, ticker and text from the json file in the NASDAQ data folder and creates a csv file with the three columns
-
-json_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/Nasdaq/NASDAQ_News.json"
-first_csv_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_compact.csv"
-
-with open(json_file_path, 'r') as json_file:
-    with open(first_csv_path, 'w') as first_csv:
-        writer = csv.writer(first_csv)
-        writer.writerow(["Date", "Ticker", "Text"])
-        for i, line in enumerate(json_file):
-            data = json.loads(line)
-
-            try:
-                writer.writerow([data["article_time"]["$date"], data["symbols"], data["article_content"]])
-            except KeyError:
-                continue
-
-            if i == 100:
-                break
-
-        json_file.close()
-        first_csv.close()
-
-
-#The following code takes the csv file created from the code above and adjusts the date format such that it can be used to fetch data from the wrds database
-
 csv_processed_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_compact_processed.csv"
 
 #Open file to read and one to write
@@ -101,7 +102,7 @@ with open(first_csv_path, newline='') as first_csv:
                 #If multiple tickers use first entry. IMPORTANT: adjust later so that file multiple tickers same text
                 news[1] = news[1].split(sep= ",")[0]
 
-                #Pre-processing text to reduce noise and prepare text data for word representation learning models. Part of the code is taken from Frankel, Jennings and Lee (2021)
+                #Pre-processing text to reduce noise and prepare text data for word representation techniques (word embedding). Part of the code is taken from Frankel, Jennings and Lee (2021)
                 news[2] = fix_phrases(news[2])
                 sentences = news[2].split('.')
 
@@ -133,8 +134,6 @@ txtticker_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed d
 with open(txtticker_path, "w") as f:
     for index, row in df.iterrows():
         f.write(str(row["Ticker"]) + "\n")
-
-
 
 
 
