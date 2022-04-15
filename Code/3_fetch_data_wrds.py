@@ -5,17 +5,18 @@ import sys
 import numpy as np
 import statsmodels.formula.api as sm
 import pandas as pd
+import os
 
 #To max out field limit
 csv.field_size_limit(sys.maxsize)
 
 db = wrds.Connection(wrds_username='holzeral')
 
-filepath = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_with_permno.csv"
-newfile_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_final.csv"
+input_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed.csv"
+output_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
 
-with open(filepath, newline='') as csvfile:
-    with open(newfile_path, "w") as newfile:
+with open(input_file_path, newline='') as csvfile:
+    with open(output_file_path + "data_processed_wcontrol.csv", "w") as newfile:
 
         data_reader = csv.reader(csvfile)
         writer = csv.writer(newfile)
@@ -27,7 +28,10 @@ with open(filepath, newline='') as csvfile:
         for values in data_reader:
 
             #Get permno
-            permno = values[4]
+            try:
+                permno = values[4]
+            except IndexError:
+                continue
 
             #Get ticker
             tic = values[2]
@@ -183,7 +187,7 @@ with open(filepath, newline='') as csvfile:
             #Write into new csv file
             writer.writerow([values[1], values[2], values[3], issuno_i, shareturnover, size, btm, pre_falpha, cum_ab_return])
 
-
+os.remove(input_file_path)
 
 
 
