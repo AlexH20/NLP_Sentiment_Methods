@@ -2,11 +2,11 @@ import csv
 import pysentiment2 as ps
 
 
-filepath = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_compact_final.csv"
-newfile_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_compact_finaldm.csv"
+input_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed_wcontrol.csv"
+output_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
 
-with open(filepath, newline='') as csvfile:
-    with open(newfile_path, "w") as newfile:
+with open(input_file_path, newline='') as csvfile:
+    with open(output_file_path + "data_processed_wcontroldm", "w") as newfile:
 
         data_reader = csv.reader(csvfile)
         writer = csv.writer(newfile)
@@ -39,7 +39,6 @@ with open(filepath, newline='') as csvfile:
             lm_tone = lm_pos - lm_neg
 
             writer.writerow([values[0] ,values[1], values[2], values[3], values[4], values[5], values[6], values[7], values[8], hiv4_neg, hiv4_pos, hiv4_tone, lm_neg, lm_pos, lm_tone])
-
 
 
 
