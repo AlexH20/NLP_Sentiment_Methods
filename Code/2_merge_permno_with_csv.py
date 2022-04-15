@@ -1,10 +1,15 @@
 import pandas as pd
+import os
 
 #Use txt file with tickers to upload on wrds to get permnos as csv (select only latest permnos):https://wrds-www.wharton.upenn.edu/pages/get-data/center-research-security-prices-crsp/annual-update/tools/translate-to-permcopermno/
 
+input_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed.csv"
+permnocsv_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/permno_full.csv"
+output_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
+
 # read csv data and adjust columns from csv file output from wrds
-df1 = pd.read_csv("/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed.csv")
-df2 = pd.read_csv("/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/permno_full.csv")
+df1 = pd.read_csv(input_file_path)
+df2 = pd.read_csv(permnocsv_path)
 df2.columns = ["Date", "Ticker", "Text"]
 
 #Merge both csv files based on Ticker
@@ -22,5 +27,7 @@ del data["Date_Permno"]
 data.dropna(inplace = True)
 
 #Write file to csv for further use
-data.to_csv("/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_with_permno.csv", sep = "," )
+os.remove(input_file_path)
+data.to_csv(output_file_path + "data_processed.csv", sep = "," )
+
 
