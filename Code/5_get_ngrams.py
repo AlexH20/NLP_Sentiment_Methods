@@ -9,6 +9,8 @@ csv.field_size_limit(sys.maxsize)
 csv_processed_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed_wcontrol.csv"
 n_gram_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
 
+#Create a sparse matrix with the dictionary returned by the function get_ngrams Frankel, Jennings and Lee (2021) (modified for own needs)
+
 def sparse_mat(data):
     row1 = []
     col1 = []
@@ -145,7 +147,7 @@ def get_sparsematrix_and_car(input_path, ngram_path):
                 sentences = item[2].split('.')
                 car.append(item[8])
 
-                #Initialize dictionary within dictionary with keys according to all ngrams found in training dataset
+                #Initialize dictionary within dictionary with keys according to all ngrams found in training dataset. Frankel, Jennings and Lee (2021) (modified for own needs)
                 wrd_dictionary[i] = dict.fromkeys(wrd_list, 0)
 
                 for sentence in sentences:
