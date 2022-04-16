@@ -1,10 +1,6 @@
 # NLP-Sentiment-Methods
 
 The code in this respository takes a Nasdaq news dataset and uses the text files for sentiment disclosure analysis. 
-The goal is to extend the paper by Frankel, Jennings and Lee (2021) and check whether there findings are also valid for Nasdaq news 
-instead of 10Ks/Conference Calls. 
-Furthermore, we want to examine whether the supervised ML techniques can be improved by using word-embeddings instead of ngrams and 
-add neural nets as a supervised ML sentiment measure.
 
 Steps:
 
