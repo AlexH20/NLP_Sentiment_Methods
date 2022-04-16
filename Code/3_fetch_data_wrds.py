@@ -10,7 +10,7 @@ import os
 #To max out field limit
 csv.field_size_limit(sys.maxsize)
 
-db = wrds.Connection(wrds_username='holzeral')
+db = wrds.Connection(wrds_username=YOUR USERNAME)
 
 input_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed.csv"
 output_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
