@@ -31,6 +31,6 @@ random forest classifiers.
 
 Steps missing: 
 
--word embedding
--word embedding used with neural nets and rf
--linear regression with control variables and sentiment measures on CAR
+word embedding
+word embedding used with neural nets and rf
+linear regression with control variables and sentiment measures on CAR
