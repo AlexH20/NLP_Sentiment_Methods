@@ -8,7 +8,7 @@ add neural nets as a supervised ML sentiment measure.
 
 Steps:
 
-1)The code 1_process_data.py takes the json file as input and returns a csv file in the chosen path with three columns (Date, Ticker and Text) 
+1)The code 1_process_data.py takes a json file as input and returns a csv file in the chosen path with three columns (Date, Ticker and Text) 
 and a .txt file with the ticker names.
 
 2)The .txt file needs to be uploaded in the wrds CRSP database https://wrds-www.wharton.upenn.edu/pages/get-data/center-research-security-prices-crsp/annual-update/tools/translate-to-permcopermno/
