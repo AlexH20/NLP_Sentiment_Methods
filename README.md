@@ -1,4 +1,4 @@
-# NLP-Sentiment-Measure-Thesis
+# NLP-Sentiment-Methods
 
 The code in this respository takes a Nasdaq news dataset and uses the text files for sentiment disclosure analysis. 
 The goal is to extend the paper by Frankel, Jennings and Lee (2021) and check whether there findings are also valid for Nasdaq news 
