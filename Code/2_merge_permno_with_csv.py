@@ -3,9 +3,9 @@ import os
 
 #Use txt file with tickers to upload on wrds to get permnos as csv (select only latest permnos):https://wrds-www.wharton.upenn.edu/pages/get-data/center-research-security-prices-crsp/annual-update/tools/translate-to-permcopermno/
 
-input_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed.csv"
-permnocsv_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/permno_full.csv"
-output_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
+input_file_path = "INPUT FILE PATH"
+permnocsv_path = "PERMNO FILE PATH"
+output_file_path = "OUTPUT FILE PATH"
 
 # read csv data and adjust columns from csv file output from wrds
 df1 = pd.read_csv(input_file_path)
