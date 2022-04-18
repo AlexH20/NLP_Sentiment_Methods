@@ -14,8 +14,8 @@ csv.field_size_limit(sys.maxsize)
 
 #The following code extracts date, ticker and text from the json file in the NASDAQ data folder and creates a csv file with the three columns
 
-json_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/Nasdaq/NASDAQ_News.json"
-output_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
+json_file_path = "JSON FILE PATH"
+output_file_path = "OUTPUT FILE PATH"
 
 with open(json_file_path, 'r') as json_file:
     with open(output_file_path + "data_processed_interim.csv", 'w') as first_csv:
@@ -130,7 +130,7 @@ os.remove(output_file_path + "data_processed_interim.csv")
 #Open newly created csv file in read mode which contains tickers
 df = pd.read_csv(output_file_path + "data_processed.csv")
 
-txtticker_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
+txtticker_path = "TXT FILE PATH"
 
 #Write txt file as file document supported on wrds database with txt ticker names to get permno to upload on wrds to get permnos as csv (select only latest permnos):https://wrds-www.wharton.upenn.edu/pages/get-data/center-research-security-prices-crsp/annual-update/tools/translate-to-permcopermno/
 with open(txtticker_path + "dataticker.txt", "w") as f:
