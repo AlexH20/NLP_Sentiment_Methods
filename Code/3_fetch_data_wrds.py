@@ -12,8 +12,8 @@ csv.field_size_limit(sys.maxsize)
 
 db = wrds.Connection(wrds_username=YOUR USERNAME)
 
-input_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed.csv"
-output_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
+input_file_path = "INPUT FILE PATH"
+output_file_path = "OUTPUT FILE PATH"
 
 with open(input_file_path, newline='') as csvfile:
     with open(output_file_path + "data_processed_wcontrol.csv", "w") as newfile:
