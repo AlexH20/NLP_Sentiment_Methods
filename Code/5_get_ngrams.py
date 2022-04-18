@@ -6,8 +6,8 @@ from sklearn.ensemble import RandomForestRegressor
 #To max out field limit
 csv.field_size_limit(sys.maxsize)
 
-csv_processed_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/data_processed_wcontrol.csv"
-n_gram_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
+csv_processed_path = "INPUT FILE PATH"
+n_gram_path = "NGRAM PATH"
 
 #Create a sparse matrix with the dictionary returned by the function get_ngrams Frankel, Jennings and Lee (2021) (modified for own needs)
 
