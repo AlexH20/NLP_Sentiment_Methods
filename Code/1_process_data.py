@@ -6,6 +6,7 @@ import os
 import re
 import string
 from nltk.stem.porter import *
+from datetime import datetime
 stemmer = PorterStemmer()
 exclude = set(string.punctuation)
 
@@ -13,32 +14,8 @@ exclude = set(string.punctuation)
 csv.field_size_limit(sys.maxsize)
 
 #The following code extracts date, ticker and text from the json file in the NASDAQ data folder and creates a csv file with the three columns
-
-json_file_path = "JSON FILE PATH"
-output_file_path = "OUTPUT FILE PATH"
-
-with open(json_file_path, 'r') as json_file:
-    with open(output_file_path + "data_processed_interim.csv", 'w') as first_csv:
-        writer = csv.writer(first_csv)
-        writer.writerow(["Date", "Ticker", "Text"])
-        for i, line in enumerate(json_file):
-            data = json.loads(line)
-
-            if i % 10 == 0:
-                try:
-                    writer.writerow([data["article_time"]["$date"], data["symbols"], data["article_content"]])
-                except KeyError:
-                    continue
-
-
-
-
-        json_file.close()
-        first_csv.close()
-
-
-#The following code takes the csv file created from the code above and adjusts the date format such that it can be used to fetch data from the wrds database
-#Additionally text will be processed to reduce noise.
+#Additionally it takes the json file data created and adjusts the date format such that it can be used to fetch data from the wrds database
+#The text will be processed to reduce noise with the help of the functions from Frankel, Jennings and Lee (2021)
 
 #### FUNCTIONS TO CLEAN PHRASES AND WORDS #### Frankel, Jennings and Lee (2021)
 
@@ -61,7 +38,7 @@ def fix_phrases(section):
     if section == '.': section = ''
     return section
 
-def fixword(word):
+def fixword(word, portstem = True):
         word = word.replace('\n','')
         if re.search('[0-9]',word) != None:
             word = '00NUMBER00' # Replace numbers with 000NUMBER000
@@ -70,72 +47,88 @@ def fixword(word):
             word = '_' # Replace stop words with _
         except Exception:
             donothing = 1
-        try:
-            word = stemmer.stem(word) # Stemp words
-        except Exception:
-            word = ''
+        #Variable if stemming or not
+        if portstem:
+            try:
+                word = stemmer.stem(word)  # Stemp words
+            except Exception:
+                word = ''
         return word
 
-#Open file to read and one to write
-with open(output_file_path + "data_processed_interim.csv", newline='') as first_csv:
-    with open(output_file_path + "data_processed.csv", "w") as csv_processed:
+json_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/Nasdaq/NASDAQ_News.json"
+output_file_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
 
-        nasdaq_news = csv.reader(first_csv)
+with open(json_file_path, 'r') as json_file:
+    with open(output_file_path + "data_processed.csv", "w") as csv_file:
 
-        writer = csv.writer(csv_processed)
-        writer.writerow(["Date", "Ticker", "Text"])
+        writer = csv.writer(csv_file)
+        writer.writerow(["Date", "Ticker", "Text", "Word_count"])
 
-        # Skip header
-        next(nasdaq_news, None)
+        for i, line in enumerate(json_file):
 
-        for item in nasdaq_news:
-            # Get rid of data without ticker symbol
-            if item[1] != "":
+            data = json.loads(line)
 
-                #Change date to proper format without T and Z
-                item[0] = list(item[0])
-                item[0] = [w.replace("T", " ") for w in item[0]]
-                item[0] = [w.replace("Z", " ") for w in item[0]]
-                item[0] = "".join(item[0])
-                item[0] = item[0].split(" ")[0]
+            try:
+                date = data["article_time"]["$date"]
+            except KeyError:
+                continue
 
-                #If multiple tickers use first entry. IMPORTANT: adjust later so that file multiple tickers same text
-                item[1] = item[1].split(sep= ",")[0]
+            try:
+                ticker = data["symbols"]
+            except KeyError:
+                continue
 
-                #Pre-processing text to reduce noise and prepare text data for word representation techniques (word embedding). Part of the code is taken from Frankel, Jennings and Lee (2021)
-                item[2] = fix_phrases(item[2])
-                sentences = item[2].split('.')
+            try:
+                text = data["article_content"]
+            except KeyError:
+                continue
 
-                for v,sentence in enumerate(sentences):
+            if len(ticker.split(sep=",")) == 1 and ticker != "":
+
+                print(ticker)
+
+                # Change date to proper format without T and Z
+                date = list(date)
+                date = [w.replace("T", " ") for w in date]
+                date = [w.replace("Z", " ") for w in date]
+                date = "".join(date)
+                date = pd.to_datetime(date.split(" ")[0])
+
+                # If multiple tickers use first entry. IMPORTANT: adjust later so that file multiple tickers same text
+                ticker = ticker.split(sep=",")[0]
+
+                # Pre-processing text to reduce noise and prepare text data for word representation techniques (word embedding). Part of the code is taken from Frankel, Jennings and Lee (2021)
+                text = fix_phrases(text)
+                sentences = text.split('.')
+
+                count_words = 0
+
+                for v, sentence in enumerate(sentences):
 
                     sentences[v] = sentences[v].replace(".", "").strip()
 
                     allwords = sentences[v].split(" ")
 
                     for w, word in enumerate(allwords):
+                        count_words += 1
                         allwords[w] = fixword(allwords[w])
 
                     sentences[v] = " ".join(allwords)
 
+                text = ".".join(sentences)
 
-                item[2] = ".".join(sentences)
+                writer.writerow([date.strftime("%Y-%m-%d"), ticker, text, count_words])
 
-                writer.writerow([item[0], item[1], item[2]])
+        json_file.close()
 
-        first_csv.close()
-        csv_processed.close()
 
-os.remove(output_file_path + "data_processed_interim.csv")
-
-#Open newly created csv file in read mode which contains tickers
-df = pd.read_csv(output_file_path + "data_processed.csv")
-
-txtticker_path = "TXT FILE PATH"
+txtticker_path = "/Users/alexanderholzer/PycharmProjects/Thesis/Data/processed data/"
 
 #Write txt file as file document supported on wrds database with txt ticker names to get permno to upload on wrds to get permnos as csv (select only latest permnos):https://wrds-www.wharton.upenn.edu/pages/get-data/center-research-security-prices-crsp/annual-update/tools/translate-to-permcopermno/
 with open(txtticker_path + "dataticker.txt", "w") as f:
     for index, row in df.iterrows():
-        f.write(str(row["Ticker"]) + "\n")
+          f.write(str(row["Ticker"]) + "\n")
+
 
 
 
