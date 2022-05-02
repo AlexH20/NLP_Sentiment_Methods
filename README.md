@@ -1,6 +1,6 @@
 # NLP-Sentiment-Methods
 
-The code in this respository takes a Nasdaq news dataset and uses the text files for sentiment disclosure analysis. 
+The code in this respository takes a Nasdaq news dataset and uses the text files for sentiment analysis. 
 
 Code:
 
