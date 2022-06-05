@@ -7,17 +7,14 @@ Code:
 Process data - processes raw json data file to extract the date, ticker and text. Data is being sorted by Year and Isoweek. 
 Word count variable is created. Text is cleaned and stemmed (optional). Date is formatted and permno is fetched for later wrds data extraction. 
 
-Descriptive statistics - code to get an overview over the data
+Get_paneldata - Gets data for panel data regression of top 100 companies w.r.t. news frequency in the years 2015 - 2019 (not included - Abnormal return)
 
-Fetch_data_wrds - fetches controls and dependent variable from wrds
+Merge_data - Merges data of get_paneldata.ipynb with text dataset of process_data.ipynb
 
-Get_dm_sentiment - code to extract sentiment according to LM and HIV$
+GetdataAR - Gets data corresponding to abnormal return at day of news article publication
 
-ML_ngrams - code to extract sentiment via ML RF ngram approach
+Get_dm_sentiment - Estimation of sentiment via dm methods
 
+Get_RF_sentiment_AR - Estimation of sentiment via random forest 
 
-Steps missing: 
-
-word embedding,
-word embedding used with neural nets and rf,
-linear regression with control variables and sentiment measures on CAR
+BERT_finetuning - Fine-tuning of BERT for classification task 
