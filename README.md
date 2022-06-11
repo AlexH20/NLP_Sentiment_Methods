@@ -1,20 +1,21 @@
 # NLP-Sentiment-Methods
 
-The code in this respository takes a Nasdaq news dataset and uses the text files for sentiment analysis. 
+Sentiment Analysis based on NASDAQ news article dataset.
 
-Code:
+Steps:
 
-Process data - processes raw json data file to extract the date, ticker and text. Data is being sorted by Year and Isoweek. 
-Word count variable is created. Text is cleaned and stemmed (optional). Date is formatted and permno is fetched for later wrds data extraction. 
+Process data - processes raw json data file to extract the date, ticker and text. Remove duplicates, news articles with multiple related stock ticker symbols and companies without PERMNO match. Clean text for n-gram approach. 
 
-Get_paneldata - Gets data for panel data regression of top 100 companies w.r.t. news frequency in the years 2015 - 2019 (not included - Abnormal return)
+Get_paneldata - Gets data for panel data regression of top 100 companies w.r.t. news frequency in the years 2015 - 2019. 
 
-Merge_data - Merges data of get_paneldata.ipynb with text dataset of process_data.ipynb
+Merge_data - Merges data of get_paneldata.ipynb with text dataset of process_data.ipynb. Attention: Merging either based on unprocessed text OR processed text
 
-GetdataAR - Gets data corresponding to abnormal return at day of news article publication
+PorterStemm_words - Get dataset from Merge_data with processed text to porter stemm words for RF application with n-grams
 
-Get_dm_sentiment - Estimation of sentiment via dm methods
+DM - Use Merge_data processed text data to determine sentiment based on DM methods
 
-Get_RF_sentiment_AR - Estimation of sentiment via random forest 
+RF_onetwogram - Use porterstemm_words output file to estimate sentiment based on RF with one- and two-grams
 
-BERT_finetuning - Fine-tuning of BERT for classification task 
+RF_with_FinBERT - Use output of Merge_data file with unprocessed text to estimate sentiment with RF BERT embeddings. Same code can be used to get sentiment based on BERT encoder or FinBERT encoder. Just adjust chosen model in code!
+
+NN_with_FinBERT - Use output of Merge_data file with unprocessed text to estimate sentiment with FinBERT + Dropout & Dense Layer.
